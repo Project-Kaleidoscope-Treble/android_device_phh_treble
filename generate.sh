@@ -64,7 +64,7 @@ for part in a ab;do
 					optional_base='$(call inherit-product, device/phh/treble/base-sas.mk)'
 				fi
 
-				target="treble_${arch}_${part_suffix}${apps_suffix}${su_suffix}"
+				target="kscope_treble_${arch}_${part_suffix}${apps_suffix}${su_suffix}"
 
 				baseArch="$arch"
 				if [ "$arch" = "a64" ];then
