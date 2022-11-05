@@ -23,6 +23,7 @@ for part in a ab;do
 				model_description="Tablet with no telephony feature"
 			fi
 			vndk="vndk.mk"
+			secure='PRODUCT_COPY_FILES += device/phh/treble/empty:system/phh/secure'
 			optional_base=""
 			if [ "$arch" == "arm" ];then
 				vndk="vndk-binder32.mk"
@@ -65,6 +66,8 @@ PRODUCT_MODEL := Phh-Treble for ${model_description}
 PRODUCT_CHARACTERISTICS := device
 
 PRODUCT_PACKAGES += $extra_packages
+
+$secure
 
 EOF
 echo -e '\t$(LOCAL_DIR)/'$target.mk '\' >> AndroidProducts.mk
