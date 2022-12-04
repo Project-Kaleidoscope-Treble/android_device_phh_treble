@@ -147,7 +147,7 @@ changeKeylayout() {
     fi
 
     if getprop ro.vendor.build.fingerprint | grep -iq \
-        -e poco/ -e redmi/ -e xiaomi/ ; then
+        -e poco/ -e POCO/ -e redmi/ -e xiaomi/ ; then
         if [ ! -f /mnt/phh/keylayout/uinput-goodix.kl ]; then
           cp /system/phh/empty /mnt/phh/keylayout/uinput-goodix.kl
           chmod 0644 /mnt/phh/keylayout/uinput-goodix.kl
@@ -392,9 +392,9 @@ if getprop ro.vendor.build.fingerprint | grep -iq \
     setprop persist.sys.qcom-brightness -1
 fi
 
-# Lenovo Z5s brightness flickers without this setting
+# Lenovo Z5s & Xiaomi Mi10TLite brightness flickers without this setting
 if getprop ro.vendor.build.fingerprint | grep -iq \
-    -e Lenovo/jd2019; then
+    -e Lenovo/jd2019 -e Xiaomi/gauguin -e Redmi/gauguin; then
     setprop persist.sys.qcom-brightness -1
 fi
 
@@ -424,8 +424,15 @@ if getprop ro.vendor.build.fingerprint | grep -q -i \
     -e xiaomi/nitrogen -e xiaomi/whyred -e xiaomi/platina \
     -e xiaomi/ysl -e nubia/nx60 -e nubia/nx61 -e xiaomi/tulip \
     -e xiaomi/lavender -e xiaomi/olive -e xiaomi/olivelite -e xiaomi/pine \
+    -e POCO/evergreen; then
+    setprop persist.sys.qcom-brightness "$(cat /sys/class/leds/lcd-backlight/max_brightness)"
+fi
+
+#Redmi 9 Lancelot/Galahad
+if getprop ro.vendor.build.fingerprint | grep -q -i \
     -e Redmi/lancelot -e Redmi/galahad; then
     setprop persist.sys.qcom-brightness "$(cat /sys/class/leds/lcd-backlight/max_brightness)"
+    setprop persist.sys.overlay.devinputjack true
 fi
 
 #Realme 6
@@ -457,7 +464,7 @@ if getprop ro.vendor.build.fingerprint | grep -iq \
     -e motorola/hannah -e motorola/james -e motorola/pettyl -e xiaomi/cepheus \
     -e xiaomi/grus -e xiaomi/cereus -e xiaomi/cactus -e xiaomi/raphael -e xiaomi/davinci \
     -e xiaomi/ginkgo -e xiaomi/willow -e xiaomi/laurel_sprout -e xiaomi/andromeda \
-    -e redmi/curtana -e redmi/picasso \
+    -e xiaomi/gauguin -e redmi/gauguin -e redmi/curtana -e redmi/picasso \
     -e bq/Aquaris_M10 ; then
     mount -o bind /mnt/phh/empty_dir /vendor/lib64/soundfx
     mount -o bind /mnt/phh/empty_dir /vendor/lib/soundfx
@@ -585,6 +592,9 @@ if getprop ro.vendor.build.fingerprint | grep -iq -e Redmi/rosemary \
     -e Redmi/secret -e Redmi/maltose; then
     setprop debug.sf.latch_unsignaled 1
     setprop debug.sf.enable_hwc_vds 0
+
+    # Exclude FP input devices
+    mount -o bind /system/phh/rosemary-excluded-input-devices.xml /system/etc/excluded-input-devices.xml
 fi
 
 if getprop ro.vendor.build.fingerprint | grep -iq -E -e 'huawei|honor' || getprop persist.sys.overlay.huawei | grep -iq -E -e 'true'; then
@@ -985,6 +995,13 @@ fi
 
 if getprop ro.vendor.build.fingerprint |grep -qi redmi/curtana;then
     setprop ro.netflix.bsp_rev Q6250-19132-1
+fi
+
+if getprop ro.vendor.build.fingerprint |grep -qi Nokia/Phoenix;then
+    setprop ro.netflix.bsp_rev Q845-05000-1
+    setprop debug.sf.latch_unsignaled 1
+    setprop sys.use_fifo_ui 1
+    setprop media.settings.xml "/vendor/etc/media_profiles_vendor.xml"
 fi
 
 if getprop ro.vendor.build.fingerprint |grep -iq xiaomi/renoir;then
